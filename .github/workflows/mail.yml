@@ -17,13 +17,12 @@ jobs:
 
       - name: Create RDP User
         run: |
-          $password = -join ((33..126) | Get-Random -Count 16 | % {[char]$_})
+          $password = "${{ secrets.RDP_PASSWORD }}"
           $securePass = ConvertTo-SecureString $password -AsPlainText -Force
           New-LocalUser -Name "RDP" -Password $securePass -AccountNeverExpires
           Add-LocalGroupMember -Group "Administrators" -Member "RDP"
           Add-LocalGroupMember -Group "Remote Desktop Users" -Member "RDP"
           echo "RDP_USER=RDP" >> $env:GITHUB_ENV
-          echo "RDP_PASS=$password" >> $env:GITHUB_ENV
 
       - name: Install Tailscale
         run: |
